@@ -1,0 +1,201 @@
+drop table IF EXISTS store;
+drop table IF EXISTS manager;
+drop table IF EXISTS worker;
+drop table IF EXISTS customer;
+drop table IF EXISTS medicine;
+drop table IF EXISTS sales;
+drop table IF EXISTS purchases;
+drop table IF EXISTS inventory;
+Drop table IF EXISTS manufacturer;
+
+CREATE TABLE store(store_name char(30) NOT NULL, manager_num int, address char(30), phone char(15), PRIMARY KEY(store_name));
+
+CREATE TABLE manager(manager_num int NOT NULL, manager_name char(10), employee_num int, PRIMARY KEY(manager_num), FOREIGN KEY (employee_num) REFERENCES worker(employee_num)) ENGINE =INNODB;
+
+CREATE TABLE worker(employee_num int NOT NULL, manager_num int, employee_name char(10), position char(15), PRIMARY KEY(employee_num), FOREIGN KEY (manager_num) REFERENCES manager(manager_num)) ENGINE =INNODB;
+
+CREATE TABLE customer(customer_num int NOT NULL, customer_name char(10), address char(30), PRIMARY KEY(customer_num)) ENGINE =INNODB;
+
+CREATE TABLE medicine(ndc_num int NOT NULL, manufacturer_name char(20) NOT NULL, type char(30), name char(15), inventory_num int, PRIMARY KEY(ndc_num), FOREIGN KEY (manufacturer_name) REFERENCES manufacturer(manufacturer_name), FOREIGN KEY (inventory_num) REFERENCES inventory(inventory_num)) ENGINE =INNODB;
+
+CREATE TABLE manufacturer(manufacturer_name char(20) NOT NULL, PRIMARY KEY (manufacturer_name)) ENGINE =INNODB;
+
+CREATE TABLE sales(sale_num int NOT NULL, employee_num int, customer_num int, inventory_num int, quantity int, PRIMARY KEY(sale_num), FOREIGN KEY (employee_num) REFERENCES worker(employee_num), FOREIGN KEY (customer_num) REFERENCES customer(customer_num), FOREIGN KEY (inventory_num) REFERENCES inventory(inventory_num)) ENGINE =INNODB;
+
+CREATE TABLE purchases (order_num int NOT NULL, manufacturer_name char(20), inventory_num int, quantity int, PRIMARY KEY(order_num), FOREIGN KEY (inventory_num) REFERENCES inventory(inventory_num), FOREIGN KEY (manufacturer_name) REFERENCES manufacturer(manufacturer_name)) ENGINE =INNODB;
+
+CREATE TABLE inventory(inventory_num int NOT NULL, quantity int NOT NULL, ndc_num int, PRIMARY KEY(inventory_num), FOREIGN KEY (ndc_num) REFERENCES medicine(ndc_num)) ENGINE =INNODB;
+
+Insert into store values('The Best Pharmacy', 101, '321 Hospus Drive', '910-555-1583');
+Insert into store values('The Worst Pharmacy', 102, '43 Deceased Street', '910-555-7301');
+
+Insert into manager values(101, 'Steve', 111);
+Insert into manager values(102, 'Ashley', 112);
+
+Insert into worker values(111, 101, 'Steve', 'Manager');
+Insert into worker values(112, 102, 'Ashley', 'Manager');
+Insert into worker values(113, 101, 'Sam', 'Salesman');
+Insert into worker values(114, 101, 'Pat', 'Doctor');
+Insert into worker values(115, 101, 'Sally', 'Receiver');
+Insert into worker values(116, 101, 'Helen', 'Researcher');
+Insert into worker values(117, 102, 'Danny', 'Researcher');
+Insert into worker values(118, 102, 'Harry', 'Salesman');
+Insert into worker values(119, 102, 'Jenny', 'Salesman');
+Insert into worker values(120, 102, 'Caroline', 'Doctor');
+Insert into worker values(121, 102, 'Sydney', 'Receiver');
+
+Insert into customer values(1001, 'Trevor', '123 Plum Lane');
+Insert into customer values(1002, 'Jim', '132 Orange Street');
+Insert into customer values(1003, 'Phil', '152 Plum Drive');
+Insert into customer values(1004, 'Frank', '16 Apple Lane');
+Insert into customer values(1005, 'Francesca', '123 Plum Point');
+Insert into customer values(1006, 'Howard', '123 Grape Street');
+Insert into customer values(1007, 'Meredith', '341 Strawberry Lane');
+Insert into customer values(1008, 'Shelby', '132 Orange Drive');
+Insert into customer values(1009, 'Rebecca', '24 Lime Lane');
+Insert into customer values(1010, 'Omar', '17 Blueberry Road');
+Insert into customer values(1011, 'Jack', '24 Lime Lane');
+
+Insert into manufacturer values('Teva Pharma');
+Insert into manufacturer values('Sanofi');
+Insert into manufacturer values('Merck & Co');
+Insert into manufacturer values('Pfizer');
+
+Insert into medicine values(601373, 'Teva Pharma', 'Thyroid', 'Synthroid', 8036);
+Insert into medicine values(602127, 'Merck & Co', 'Cholesterol', 'Lipitor', 8677);
+Insert into medicine values(602903, 'Sanofi', 'Seizure', 'Gabapentin', 8384);
+Insert into medicine values(601109, 'Pfizer', 'Pain', 'Norco', 8837);
+Insert into medicine values(609567, 'Pfizer', 'Stomach', 'Prilosec', 8713);
+Insert into medicine values(604225, 'Merck & Co', 'Antibiotic', 'Amoxicillin', 8412);
+Insert into medicine values(607752, 'Teva Pharma', 'Blood Pressure', 'Losartan', 8840);
+Insert into medicine values(604358, 'Teva Pharma', 'Blood Pressure', 'Lisinopril', 8292);
+Insert into medicine values(606035, 'Sanofi', 'Cholesterol', 'Atorvastatin', 8291);
+Insert into medicine values(609092, 'Sanofi', 'Stomach', 'Omeprazole', 8846);
+Insert into medicine values(609662, 'Pfizer', 'Cholesterol', 'Simvastatin', 8514);
+Insert into medicine values(602196, 'Pfizer', 'Anxiety', 'Xanax', 8287);
+Insert into medicine values(601577, 'Teva Pharma', 'Steroid', 'Prednisone',8358);
+Insert into medicine values(605332, 'Merck & Co', 'Pain', 'Ibuprofen', 8943);
+Insert into medicine values(607586, 'Pfizer', 'Blood Thinner', 'Warfarin', 8973);
+Insert into medicine values(603445, 'Pfizer', 'Pain', 'Oxycodone', 8112);
+Insert into medicine values(602340, 'Merck & Co', 'Cholesterol', 'Fenofibrate', 8853);
+Insert into medicine values(607888, 'Teva Pharma', 'Blood Pressure', 'Valsartan', 8053);
+Insert into medicine values(608712, 'Pfizer', 'Iron Deficiency', 'Ferrous Sulfate', 8720);
+Insert into medicine values(601772, 'Merck & Co', 'Allergy', 'Hydroxyzine', 8160);
+Insert into medicine values(602313, 'Pfizer', 'Antibiotic', 'Cephalexin', 8157);
+Insert into medicine values(667659,'Norvartis','Seizure','Phenobarbital',8225);
+Insert into medicine values(647481,'Norvartis','Antifungal','Nystatin',8518);
+Insert into medicine values(621228,'Mylan','Antifungal','Ketoconazole',8851);
+Insert into medicine values(602930,'Alcon','Stomach','Nexium',8111); LAST
+Insert into medicine values(656461,'Purdue Pharma','Stomach','Pantoprazole',8783);
+Insert into medicine values(692945,'Zentiva','Cholesterol','Rosuvastatin',8572);
+Insert into medicine values(661793,'Pfizer','Blood Pressure','Ramipril',8609);
+Insert into medicine values(645620, 'Merck & Co','Blood Thinner','Xarelto',8312);
+Insert into medicine values(611223, 'Merck & Co','Antifungal','Fluconazole',8217);
+Insert into medicine values(609877,'Zentiva','Blood Sugar','Lantus',8442);
+Insert into medicine values(685714,'Sanofi','Depression','Venlafaxine',8640);
+Insert into medicine values(676422,'Purdue Pharma','Antibiotic','Azithromycin',8272);
+Insert into medicine values(684145,'Norvartis','Blood Pressure','Spironolactone',8527);
+Insert into medicine values(639657,'Sanofi','Blood Pressure','Atenolol',8997);
+Insert into medicine values(604018,'Sanofi','Cholesterol','Pravastatin',8212);
+Insert into medicine values(692973,'Mylan','Migraine','Sumatriptan',8004);
+Insert into medicine values(665988,'Mylan','Steroid','Methylpred',8569);
+Insert into medicine values(651363,'Teva Pharma','Depression','Trazodone',8432);
+Insert into medicine values(697882,'Merck & Co','Antibiotic','Bactrim',8955);
+Insert into medicine values(623272,'Alcon','Antibiotic','Penicillin',8898);
+Insert into medicine values(675366,'Zentiva','Anxiety','Celexa',8612);
+Insert into medicine values(610477,'Norvartis','Anxiety','Prozac',8247);
+Insert into medicine values(642324,'Norvartis','Anxiety','Diazepam',8240);
+Insert into medicine values(634742,'Alcon','Allergy','Promethazine',8258);
+Insert into medicine values(649118,'Pfizer','Allergy','Cetirizine',8228);
+Insert into medicine values(678992,'Alcon','Depression','Zoloft',8308);
+Insert into medicine values(619904,'Sanofi','Blood Pressure','Metoprolol',8644);
+Insert into medicine values(666098,'Mylan','Blood Thinner','Pradaxa',8021);
+Insert into medicine values(648147,'Mylan','Blood Thinner','Eliquis',8073);
+Insert into medicine values(691423,'Pfizer','Blood Sugar','Glipizide',8221);
+Insert into medicine values(616944,'Purdue Pharma','Blood Sugar','Metformin',8164);
+Insert into medicine values(690817,'Alcon','Pain','Tramadol',8952);
+Insert into medicine values(617485,'Zentiva','Blood Pressure','Amlodipine',8364);
+Insert into medicine values(656202,'Zentiva','Sleep','Temazepam',8597);
+Insert into medicine values(674272,'Alcon','Sleep','Lunesta',8989);
+Insert into medicine values(604962,'Norvartis','Sleep','Ambien',8785);
+
+
+Insert into inventory values(8157, 14, 602313);
+Insert into inventory values(8160, 7, 601772);
+Insert into inventory values(8720, 12, 608712);
+Insert into inventory values(8053, 7, 607888);
+Insert into inventory values(8853, 5, 602340);
+Insert into inventory values(8112, 2, 603445);
+Insert into inventory values(8973, 2, 607586);
+Insert into inventory values(8943, 16, 605332);
+Insert into inventory values(8358, 14, 601577);
+Insert into inventory values(8287, 17, 602196);
+Insert into inventory values(8514, 21, 609662);
+Insert into inventory values(8846, 2, 609092);
+Insert into inventory values(8291, 8, 606035);
+Insert into inventory values(8292, 4, 604358);
+Insert into inventory values(8840, 2, 607752);
+Insert into inventory values(8412, 14, 604225);
+Insert into inventory values(8713, 15, 609567);
+Insert into inventory values(8837, 21, 601109);
+Insert into inventory values(8384, 20, 602903);
+Insert into inventory values(8677, 16, 602127);
+Insert into inventory values(8036, 3, 601373);
+Insert into inventory values(8785,12,604962);
+Insert into inventory values(8989,9,674272);
+Insert into inventory values(8597,2,656202);
+Insert into inventory values(8364,2,617485); LAST
+Insert into inventory values(8952,15,690817); 
+Insert into inventory values(8164,10,616944);
+Insert into inventory values(8221,15,691423);
+Insert into inventory values(8073,12,648147);
+Insert into inventory values(8021,12,666098);
+Insert into inventory values(8644,9,619904);
+Insert into inventory values(8308,8,678992);
+Insert into inventory values(8228,20,649118);
+Insert into inventory values(8258,10,634742);
+Insert into inventory values(8240,8,642324);
+Insert into inventory values(8247,20,610477);
+Insert into inventory values(8612,12,675366);
+Insert into inventory values(8898,6,623272);
+Insert into inventory values(8955,9,697882);
+Insert into inventory values(8432,13,651363);
+Insert into inventory values(8569,13,665988);
+Insert into inventory values(8004,2,692973);
+Insert into inventory values(8212,2,604018);
+Insert into inventory values(8997,12,639657);
+Insert into inventory values(8527,8,684145);
+Insert into inventory values(8272,7,676422);
+Insert into inventory values(8640,12,685714);
+Insert into inventory values(8442,9,609877);
+Insert into inventory values(8217,15,611223);
+Insert into inventory values(8312,8,645620);
+Insert into inventory values(8609,11,661793);
+Insert into inventory values(8572,3,692945);
+Insert into inventory values(8783,4,656461);
+Insert into inventory values(8111,8,602930);
+Insert into inventory values(8851,9,621228);
+Insert into inventory values(8518,15,647481);
+Insert into inventory values(8225,18,667659);
+
+Insert into purchases values(02220, 'Teva Pharma', 8292, 4);
+Insert into purchases values(07430, 'Merck & Co', 8412, 2);
+Insert into purchases values(08608, 'Teva Pharma', 8053, 5);
+Insert into purchases values(03486, 'Sanofi', 8291, 2);
+Insert into purchases values(04914, 'Pfizer', 8837, 3);
+Insert into purchases values(04851, 'Teva Pharma', 8840, 6);
+Insert into purchases values(04970, 'Merck & Co', 8943, 6);
+Insert into purchases values(04276, 'Pfizer', 8157, 4);
+Insert into purchases values(06653, 'Merck & Co', 8853 ,5);
+
+Insert into sales values(101, 111,1004, 8720, 3);
+Insert into sales values(102, 112,1002, 8036, 1);
+Insert into sales values(103, 114,1008, 8291, 1);
+Insert into sales values(104, 115,1011, 8713, 8);
+Insert into sales values(105, 111,1003, 8677, 4);
+Insert into sales values(106, 111,1004, 8720, 1);
+Insert into sales values(107, 117,1007, 8384, 2);
+Insert into sales values(108, 113,1006, 8292, 3);
+Insert into sales values(109, 118,1006, 8292, 7);
+Insert into sales values(110, 113,1004, 8973, 2);
+Insert into sales values(111, 119,1002, 8720, 3);
